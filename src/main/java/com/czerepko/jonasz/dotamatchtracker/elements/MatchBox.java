@@ -51,52 +51,71 @@ public class MatchBox extends HBox {
 		this.teamOne = matchInfo.teamOne;
 		this.teamTwo = matchInfo.teamTwo;
 		
+		replaceWildcards();
 		loadLogos();		
 		createMatchBox();
+	}
+	
+	private void replaceWildcards() {
+		if ("Wild Card 1".equals(teamOne))
+			teamOne = "CDEC Gaming";
+		else if ("Wild Card 1".equals(teamTwo))
+			teamTwo = "CDEC Gaming";
+		
+		if ("Wild Card 2".equals(teamOne))
+			teamOne = "MVP Phoenix";
+		else if ("Wild Card 2".equals(teamTwo))
+			teamTwo = "MVP Phoenix";
 	}
 	
 	private void loadLogos() {
 		teamOneLogo = loadLogo(teamOne);
 		teamTwoLogo = loadLogo(teamTwo);
 		
-		teamOneLogo.setFitWidth(LOGO_SIZE);
+		teamOneLogo.setFitHeight(LOGO_SIZE);
 		teamOneLogo.setPreserveRatio(true);
-		teamTwoLogo.setFitWidth(LOGO_SIZE);
+		teamTwoLogo.setFitHeight(LOGO_SIZE);
 		teamTwoLogo.setPreserveRatio(true);
 	}
 	
 	private ImageView loadLogo(String teamName) {
 		switch(teamName) {
 			case "Team Secret":
-				return new ImageView(getClass().getResource("../resources/secret.png").toString());
+				return new ImageView(getClass().getResource("resources/secret.png").toString());
 			case "Cloud9":
-				return new ImageView(getClass().getResource("../resources/cloud9.png").toString());
+				return new ImageView(getClass().getResource("resources/cloud9.png").toString());
 			case "compLexity Gaming":
-				return new ImageView(getClass().getResource("../resources/complexity.png").toString());
+				return new ImageView(getClass().getResource("resources/complexity.png").toString());
 			case "EHOME":
-				return new ImageView(getClass().getResource("../resources/ehome.png").toString());
+				return new ImageView(getClass().getResource("resources/ehome.png").toString());
 			case "Evil Geniuses":
-				return new ImageView(getClass().getResource("../resources/eg.png").toString());
+				return new ImageView(getClass().getResource("resources/eg.png").toString());
 			case "Fnatic":
-				return new ImageView(getClass().getResource("../resources/fnatic.png").toString());
+				return new ImageView(getClass().getResource("resources/fnatic.png").toString());
 			case "Invictus Gaming":
-				return new ImageView(getClass().getResource("../resources/ig.png").toString());
+				return new ImageView(getClass().getResource("resources/ig.png").toString());
 			case "LGD Gaming":
-				return new ImageView(getClass().getResource("../resources/lgd.png").toString());
+				return new ImageView(getClass().getResource("resources/lgd.png").toString());
 			case "MVP HOTSIX":
-				return new ImageView(getClass().getResource("../resources/mvp6.png").toString());
+				return new ImageView(getClass().getResource("resources/mvp6.png").toString());
 			case "Na`Vi":
-				return new ImageView(getClass().getResource("../resources/navi.png").toString());
+				return new ImageView(getClass().getResource("resources/navi.png").toString());
 			case "Newbee":
-				return new ImageView(getClass().getResource("../resources/newbee.png").toString());
+				return new ImageView(getClass().getResource("resources/newbee.png").toString());
 			case "Team Empire":
-				return new ImageView(getClass().getResource("../resources/empire.png").toString());
+				return new ImageView(getClass().getResource("resources/empire.png").toString());
 			case "Vici Gaming":
-				return new ImageView(getClass().getResource("../resources/vg.png").toString());
+				return new ImageView(getClass().getResource("resources/vg.png").toString());
 			case "Virtus.Pro":
-				return new ImageView(getClass().getResource("../resources/vp.png").toString());
+				return new ImageView(getClass().getResource("resources/vp.png").toString());
+			case "CDEC Gaming":
+			case "Wild Card 1":
+				return new ImageView(getClass().getResource("resources/cdec.png").toString());
+			case "MVP Phoenix":
+			case "Wild Card 2":
+				return new ImageView(getClass().getResource("resources/mvpp.png").toString());
 			default:
-				return new ImageView(getClass().getResource("../resources/default.png").toString());
+				return new ImageView(getClass().getResource("resources/default.png").toString());
 		}
 	}
 

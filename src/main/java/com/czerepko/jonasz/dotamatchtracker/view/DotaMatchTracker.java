@@ -11,6 +11,7 @@ import java.awt.TrayIcon;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
@@ -20,6 +21,7 @@ import org.joda.time.DateTime;
 import com.czerepko.jonasz.dotamatchtracker.elements.MatchBox;
 import com.czerepko.jonasz.dotamatchtracker.elements.MatchInfo;
 import com.czerepko.jonasz.dotamatchtracker.util.Utilities;
+import com.czerepko.jonasz.dotamatchtracker.web.HTMLParser;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -27,8 +29,12 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -44,6 +50,8 @@ public class DotaMatchTracker extends Application {
 	private Stage primaryStage;	
 	private VBox mainLayout;
 	
+	private ArrayList<MatchInfo> matchInfo;
+	
     public static void main(String[] args) {
     	launch(args);
     }
@@ -57,20 +65,34 @@ public class DotaMatchTracker extends Application {
 		addAplicationToTray();
 	}
 	
-	private void initRootLayout() {        
+	private void initRootLayout() {  
+		HBox hbox = new HBox();
+		
         mainLayout = new VBox(5);
         mainLayout.setBackground(new Background(new BackgroundFill(Color.rgb(31, 31, 31), null, null)));
+        
+        primaryStage.setMinHeight(0);
+        primaryStage.setMaxHeight(500);
+        mainLayout.minHeight(0);
+        
+        ScrollPane sp = new ScrollPane();
+        sp.setContent(mainLayout);
+        hbox.getChildren().add(sp);
+        sp.setHbarPolicy(ScrollBarPolicy.NEVER);
+        sp.setVbarPolicy(ScrollBarPolicy.ALWAYS);
 
         mainLayout.getChildren().add(Utilities.addStreamButtons());
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "compLexity Gaming", "Cloud9")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "Team Secret", "Vici Gaming")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "Invictus Gaming", "Fnatic")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "compLexity Gaming", "Cloud9")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "Team Secret", "Vici Gaming")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "Invictus Gaming", "Fnatic")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "compLexity Gaming", "Cloud9")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "Team Secret", "Vici Gaming")));
-        mainLayout.getChildren().add(new MatchBox(new MatchInfo(7, 26, 18, 30, "Invictus Gaming", "Fnatic")));
+        
+        HTMLParser hp = null;
+        try {
+			hp = new HTMLParser("http://www.dotacinema.com/tournament/the-international-2015");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        hp.setTableElements(" ");
+        matchInfo = hp.getMatchesFromTable();
+        for (MatchInfo m : matchInfo)
+        	 mainLayout.getChildren().add(new MatchBox(m));
         
         Platform.setImplicitExit(false);
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -80,7 +102,7 @@ public class DotaMatchTracker extends Application {
             }
         });
         
-        Scene scene = new Scene(mainLayout);
+        Scene scene = new Scene(hbox);
         primaryStage.setScene(scene);
         primaryStage.show();
 	}
@@ -100,7 +122,7 @@ public class DotaMatchTracker extends Application {
 		Image image = null;
 
 		try {
-			image = ImageIO.read(getClass().getResource("../resources/tray.png"));
+			image = ImageIO.read(getClass().getResource("resources/tray.png"));
 		} catch (IOException e) {
 			Platform.exit();
 		}
@@ -125,6 +147,13 @@ public class DotaMatchTracker extends Application {
         popup.add(openItem);
         popup.add(exitItem);
         trayIcon.setPopupMenu(popup);
+        
+        String tooltip = Utilities.getNextMatch(matchInfo);
+        
+        if (tooltip == null)
+        	trayIcon.setToolTip("Cannot find next match");
+        else
+        	trayIcon.setToolTip("Next match: " + tooltip);
         
         try {
 			tray.add(trayIcon);

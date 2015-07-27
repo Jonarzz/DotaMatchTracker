@@ -25,4 +25,14 @@ public class MatchInfo {
 		this.teamOne = teamOne;
 		this.teamTwo = teamTwo;
 	}
+	
+	public MatchInfo(DateTime matchDate, String teamOne, String teamTwo) {
+		this.matchDate = matchDate;
+		this.teamOne = teamOne;
+		this.teamTwo = teamTwo;
+	}
+	
+	public String toString() {
+		return matchDate.toString("dd-MM-yyyy HH:mm") + " " + teamOne + " vs " + teamTwo;
+	}
 }

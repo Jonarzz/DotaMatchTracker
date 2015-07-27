@@ -4,6 +4,12 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import com.czerepko.jonasz.dotamatchtracker.elements.MatchInfo;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -98,8 +104,14 @@ public class Utilities {
 			    };
 		}
 		
-	    
 	    return event;
 	}
 	
+	public static String getNextMatch(ArrayList<MatchInfo> matchInfo) {
+		for (MatchInfo m : matchInfo)
+			if (m.matchDate.getMillis() > new DateTime().getMillis())
+				return m.toString();
+		
+		return null;
+	}
 }
